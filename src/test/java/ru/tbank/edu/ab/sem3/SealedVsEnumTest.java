@@ -19,6 +19,10 @@ class SealedVsEnumTest {
             case SealedExample.Green ignored -> "Зеленый";
         };
         System.out.printf("%s - это %s цвет%n", color.getRgb(), description);
+
+        var color1 = SealedExample.Color.fromRgb("#FF0000")
+                .orElseThrow(IllegalArgumentException::new);
+        System.out.println(color1);
     }
 
     @Test
@@ -32,6 +36,10 @@ class SealedVsEnumTest {
             case EnumExample.Color.GREEN -> "Зеленый";
         };
         System.out.printf("%s - это %s цвет%n", color.getRgb(), description);
+
+        var color1 = EnumExample.Color.fromRgb("#FF0000")
+                .orElseThrow(IllegalArgumentException::new);
+        System.out.println(color1);
     }
 
 }
