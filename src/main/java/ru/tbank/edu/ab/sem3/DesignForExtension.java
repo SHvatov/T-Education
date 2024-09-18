@@ -2,7 +2,7 @@ package ru.tbank.edu.ab.sem3;
 
 public class DesignForExtension {
 
-    public static abstract class Transactional<R> {
+    public static abstract class TransactionalAction<R> {
 
         protected abstract R executeInTransaction(Transaction transaction);
 
@@ -14,7 +14,7 @@ public class DesignForExtension {
 
         }
 
-        protected final R executeInTransaction() {
+        public final R executeInTransaction() {
             var transaction = Transaction.create();
             try {
                 var result = executeInTransaction(transaction);
@@ -29,9 +29,11 @@ public class DesignForExtension {
                 transaction.close();
             }
         }
+
     }
 
-    public static final class SavePersonAction extends Transactional<Person> {
+    public static final class SavePersonAction extends TransactionalAction<Person> {
+
         @Override
         protected Person executeInTransaction(Transaction transaction) {
             return new Person("Sergey", "Khvatov", 25);
@@ -42,6 +44,7 @@ public class DesignForExtension {
             System.out.printf("Ошибка при сохранении пользователя: %s", exception.getMessage());
             exception.printStackTrace();
         }
+
     }
 
     public static final class Transaction implements AutoCloseable {
@@ -62,5 +65,7 @@ public class DesignForExtension {
         public static Transaction create() {
             return new Transaction();
         }
+
     }
+
 }
