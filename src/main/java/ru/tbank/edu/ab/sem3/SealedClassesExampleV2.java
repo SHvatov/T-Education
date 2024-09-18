@@ -1,6 +1,9 @@
 package ru.tbank.edu.ab.sem3;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 
 public class SealedClassesExampleV2 {
@@ -74,6 +77,10 @@ public class SealedClassesExampleV2 {
 
     public static class GameEventHandler {
 
+        boolean supports(GameEvent event) {
+            return true;
+        }
+
         void handle(GameEvent event) {
             switch (event) {
                 case VillagerDiedEvent villagerDiedEvent -> {
@@ -93,6 +100,20 @@ public class SealedClassesExampleV2 {
                     }
                 }
             }
+        }
+
+    }
+
+    @RequiredArgsConstructor
+    public static class GameEventHandlerV2 extends GameEventHandler {
+
+        private final List<GameEventHandler> handlers;
+
+        @Override
+        void handle(GameEvent event) {
+            handlers.stream()
+                    .filter(it -> it.supports(event)).findFirst()
+                    .ifPresent(it -> it.handle(event));
         }
 
     }
