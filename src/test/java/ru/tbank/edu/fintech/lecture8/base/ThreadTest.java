@@ -1,18 +1,15 @@
 package ru.tbank.edu.fintech.lecture8.base;
 
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.logging.Level;
-
+import static ru.tbank.edu.fintech.lecture8.LoggingUtils.info;
 import static ru.tbank.edu.fintech.lecture8.ThreadUtils.getCurrentThreadName;
 import static ru.tbank.edu.fintech.lecture8.ThreadUtils.sleep;
 import static ru.tbank.edu.fintech.lecture8.ThreadUtils.withThreadInterruptionHandled;
 
 
-@Log
 public class ThreadTest {
 
     @Test
@@ -21,24 +18,24 @@ public class ThreadTest {
     void test0() {
         var helloWorldThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
-                log.log(Level.INFO, "Hello, world!");
+                info("Hello, world!");
                 withThreadInterruptionHandled(() -> sleep(2_000));
             }
-            log.log(Level.INFO, "Goodbye, world!");
+            info("Goodbye, world!");
         });
 
         var tickThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
-                log.log(Level.INFO, "Tick!");
+                info("Tick!");
                 withThreadInterruptionHandled(() -> sleep(1_000));
             }
-            log.log(Level.INFO, "Tuck!");
+            info("Tuck!");
         });
 
         var interruptionThread = new Thread(() -> {
             sleep(5_000);
 
-            log.log(Level.INFO, "Interrupting all threads!");
+            info("Interrupting all threads!");
             helloWorldThread.interrupt();
             tickThread.interrupt();
         });
@@ -116,17 +113,17 @@ public class ThreadTest {
                 .start(() -> greetTheWorld(1_000));
 
         Thread.sleep(5_000);
-        log.log(Level.INFO, "Total active threads: {0}", group.activeCount());
+        info("Total active threads: {0}", group.activeCount());
 
         group.interrupt();
 
         Thread.sleep(1_000);
-        log.log(Level.INFO, "Total active threads: {0}", group.activeCount());
+        info("Total active threads: {0}", group.activeCount());
     }
 
     private static void greetTheWorld(long sleepMs) {
         while (!Thread.currentThread().isInterrupted()) {
-            log.log(Level.INFO, "Hello, world, from {0}", getCurrentThreadName());
+            info("Hello, world, from {0}", getCurrentThreadName());
             sleep(sleepMs);
         }
     }

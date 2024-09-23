@@ -2,18 +2,17 @@ package ru.tbank.edu.fintech.lecture8;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import lombok.extern.java.Log;
 
-import java.util.logging.Level;
+import static ru.tbank.edu.fintech.lecture8.LoggingUtils.error;
+import static ru.tbank.edu.fintech.lecture8.LoggingUtils.trace;
 
 
-@Log
 @UtilityClass
 public class ThreadUtils {
 
     @SneakyThrows
     public static void sleep(long ms) {
-        log.log(Level.FINE, "Stopping thread {0} for {1} ms", new Object[] { getCurrentThreadName(), ms });
+        trace("Stopping thread {0} for {1} ms", getCurrentThreadName(), ms);
         Thread.sleep(ms);
     }
 
@@ -29,10 +28,7 @@ public class ThreadUtils {
         try {
             runnable.run();
         } catch (InterruptedException exception) {
-            log.log(
-                    Level.SEVERE,
-                    "Thread {0} has been interrupted, calling corresponding handler",
-                    new Object[] { getCurrentThreadName(), exception });
+            error("Thread {0} has been interrupted, calling corresponding handler", getCurrentThreadName(), exception);
             onThreadInterruption.run();
             Thread.currentThread().interrupt();
         }

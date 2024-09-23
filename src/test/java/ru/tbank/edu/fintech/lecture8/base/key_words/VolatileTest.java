@@ -9,13 +9,16 @@ import org.junit.jupiter.api.RepeatedTest;
 
 import java.util.stream.IntStream;
 
+import static ru.tbank.edu.fintech.lecture8.LoggingUtils.info;
+import static ru.tbank.edu.fintech.lecture8.ThreadUtils.sleep;
+
 
 public class VolatileTest {
 
     @SneakyThrows
-    @RepeatedTest(1)
+    @RepeatedTest(10)
     @DisplayName("Пример использования volatile")
-    void test0() {
+    void test() {
         var counter = VolatileCounter.builder()
                 .maxValue(1_000)
                 .value(0)
@@ -25,9 +28,7 @@ public class VolatileTest {
                 .name("modifier")
                 .unstarted(() -> {
                     while (counter.increment()) {
-                        System.out.printf(
-                                "Значение счетчика в %s нс увеличено до %d%n%n",
-                                System.nanoTime(), counter.getValue());
+                        info("[{0} нс] Значение счетчика увеличено до {1}", System.nanoTime(), counter.getValue());
                     }
                 });
 
@@ -36,20 +37,13 @@ public class VolatileTest {
                         .name("reader-%s".formatted(it))
                         .start(() -> {
                             while (true) {
-                                System.out.printf(
-                                        "Значение счетчика в %s нс потоке %s: %d%n",
-                                        System.nanoTime(), Thread.currentThread().getName(), counter.getValue());
+                                info("[{0} нс] Значение счетчика в потоке: {1}", System.nanoTime(), counter.getValue());
                                 sleep(1);
                             }
                         }));
 
         modifier.start();
-        Thread.sleep(100);
-    }
-
-    @SneakyThrows
-    private static void sleep(long ms) {
-        Thread.sleep(ms);
+        sleep(100);
     }
 
     @Data
@@ -61,6 +55,7 @@ public class VolatileTest {
 
         private int value;
         private int maxValue;
+        // private volatile int maxValue;
 
         public boolean increment() {
             if (value < maxValue) {

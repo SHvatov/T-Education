@@ -6,45 +6,48 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.IntStream;
 
+import static ru.tbank.edu.fintech.lecture8.LoggingUtils.info;
+import static ru.tbank.edu.fintech.lecture8.ThreadUtils.getCurrentThreadName;
+import static ru.tbank.edu.fintech.lecture8.ThreadUtils.sleep;
+
 
 public class WaitNotifyTest {
 
     @Test
     @SneakyThrows
     @DisplayName("Пример использования wait & notify")
-    void test0() {
+    void test() {
         var sync = new Object();
 
         IntStream.range(0, 10).forEach(it ->
                 Thread.ofPlatform()
                         .name("waiter-%s".formatted(it))
-                        .start(() -> wait(sync)));
+                        .start(() -> doTest(sync)));
 
         Thread.sleep(1000);
         synchronized (sync) {
-            System.out.println("Начинаем работу очереди!");
+            info("Начинаем работу очереди!");
             sync.notifyAll();
-            Thread.sleep(1000);
-            System.out.println("А вот теперь реально начинаем работу очереди!");
+            sleep(1000);
+            info("А вот теперь реально начинаем работу очереди!");
         }
 
         Thread.sleep(10_000);
     }
 
     @SneakyThrows
-    private static void wait(Object sync) {
-        System.out.printf("Поток %s ожидает своей очереди%n", Thread.currentThread().getName());
+    private static void doTest(Object sync) {
+        info("Поток {0} ожидает своей очереди", getCurrentThreadName());
         synchronized (sync) {
             sync.wait();
+            info("Поток {0} дождался своей очереди", getCurrentThreadName());
 
-            System.out.printf("Поток %s дождался своей очереди%n", Thread.currentThread().getName());
-
-            System.out.printf("Поток %s отпустил монитор на синхронизаторе%n", Thread.currentThread().getName());
             Thread.sleep(100);
 
             sync.notifyAll();
-            System.out.printf("Поток %s освободил место в очереди%n", Thread.currentThread().getName());
+            info("Поток {0} уведомил всех о наличии свободного места в очереди", getCurrentThreadName());
         }
+        info("Поток {0} отпустил монитор на синхронизаторе", getCurrentThreadName());
     }
 
 }
