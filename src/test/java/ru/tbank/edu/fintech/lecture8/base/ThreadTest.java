@@ -17,6 +17,7 @@ public class ThreadTest {
     @DisplayName("Базовая база - демонстрация создания и работы с несколькими потоками")
     void test0() {
         var helloWorldThread = new Thread(() -> {
+            // Рассказать про Thread.currentThread().interrupt();
             while (!Thread.currentThread().isInterrupted()) {
                 info("Hello, world!");
                 withThreadInterruptionHandled(() -> sleep(2_000));

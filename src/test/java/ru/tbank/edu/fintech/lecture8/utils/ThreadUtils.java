@@ -3,6 +3,8 @@ package ru.tbank.edu.fintech.lecture8.utils;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
+import java.util.function.Supplier;
+
 import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.error;
 import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.trace;
 
@@ -36,6 +38,15 @@ public class ThreadUtils {
 
     public static String getCurrentThreadName() {
         return Thread.currentThread().getName();
+    }
+
+    public static <T> T sleepAndGet(long ms, T value) {
+        return sleepAndGet(ms, () -> value);
+    }
+
+    public static <T> T sleepAndGet(long ms, Supplier<T> supplier) {
+        sleep(ms);
+        return supplier.get();
     }
 
     /**
