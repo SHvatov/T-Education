@@ -1,10 +1,10 @@
-package ru.tbank.edu.fintech.lecture8;
+package ru.tbank.edu.fintech.lecture8.utils;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
-import static ru.tbank.edu.fintech.lecture8.LoggingUtils.error;
-import static ru.tbank.edu.fintech.lecture8.LoggingUtils.trace;
+import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.error;
+import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.trace;
 
 
 @UtilityClass
@@ -43,7 +43,7 @@ public class ThreadUtils {
      */
     public interface InterruptibleRunnable {
 
-        void run() throws InterruptedException;
+        void run() throws Exception;
 
     }
 

@@ -4,10 +4,10 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static ru.tbank.edu.fintech.lecture8.LoggingUtils.info;
-import static ru.tbank.edu.fintech.lecture8.ThreadUtils.getCurrentThreadName;
-import static ru.tbank.edu.fintech.lecture8.ThreadUtils.sleep;
-import static ru.tbank.edu.fintech.lecture8.ThreadUtils.withThreadInterruptionHandled;
+import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.info;
+import static ru.tbank.edu.fintech.lecture8.utils.ThreadUtils.getCurrentThreadName;
+import static ru.tbank.edu.fintech.lecture8.utils.ThreadUtils.sleep;
+import static ru.tbank.edu.fintech.lecture8.utils.ThreadUtils.withThreadInterruptionHandled;
 
 
 public class ThreadTest {

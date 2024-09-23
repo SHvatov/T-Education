@@ -1,4 +1,4 @@
-package ru.tbank.edu.fintech.lecture8.base.key_words;
+package ru.tbank.edu.fintech.lecture8.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.RepeatedTest;
 
 import java.util.stream.IntStream;
 
-import static ru.tbank.edu.fintech.lecture8.LoggingUtils.info;
-import static ru.tbank.edu.fintech.lecture8.ThreadUtils.sleep;
+import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.info;
+import static ru.tbank.edu.fintech.lecture8.utils.ThreadUtils.sleep;
 
 
 public class VolatileTest {

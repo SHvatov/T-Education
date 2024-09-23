@@ -1,4 +1,4 @@
-package ru.tbank.edu.fintech.lecture8;
+package ru.tbank.edu.fintech.lecture8.utils;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.java.Log;
