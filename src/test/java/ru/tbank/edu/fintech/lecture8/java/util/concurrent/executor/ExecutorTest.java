@@ -1,4 +1,4 @@
-package ru.tbank.edu.fintech.lecture8.java.util.concurrent;
+package ru.tbank.edu.fintech.lecture8.java.util.concurrent.executor;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
