@@ -1,4 +1,4 @@
-package ru.tbank.edu.fintech.lecture8;
+package ru.tbank.edu.fintech.lecture8.base.key_words;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

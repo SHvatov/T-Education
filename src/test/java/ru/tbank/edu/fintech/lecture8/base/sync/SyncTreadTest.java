@@ -1,4 +1,4 @@
-package ru.tbank.edu.fintech.lecture8;
+package ru.tbank.edu.fintech.lecture8.base.sync;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

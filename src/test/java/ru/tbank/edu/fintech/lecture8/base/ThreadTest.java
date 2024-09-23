@@ -1,10 +1,18 @@
-package ru.tbank.edu.fintech.lecture8;
+package ru.tbank.edu.fintech.lecture8.base;
 
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.logging.Level;
 
+import static ru.tbank.edu.fintech.lecture8.ThreadUtils.getCurrentThreadName;
+import static ru.tbank.edu.fintech.lecture8.ThreadUtils.sleep;
+import static ru.tbank.edu.fintech.lecture8.ThreadUtils.withThreadInterruptionHandled;
+
+
+@Log
 public class ThreadTest {
 
     @Test
@@ -12,41 +20,25 @@ public class ThreadTest {
     @DisplayName("Базовая база - демонстрация создания и работы с несколькими потоками")
     void test0() {
         var helloWorldThread = new Thread(() -> {
-            while (!Thread.interrupted()) {
-                System.out.println("Hello, world!");
-                try {
-                    // noinspection BusyWait
-                    Thread.sleep(2_000);
-                } catch (InterruptedException exception) {
-                    System.out.println("Thread has been interrupted!");
-                    break;
-                }
+            while (!Thread.currentThread().isInterrupted()) {
+                log.log(Level.INFO, "Hello, world!");
+                withThreadInterruptionHandled(() -> sleep(2_000));
             }
-            System.out.println("Goodbye, world!");
+            log.log(Level.INFO, "Goodbye, world!");
         });
 
         var tickThread = new Thread(() -> {
-            while (!Thread.interrupted()) {
-                System.out.println("Tick!");
-                try {
-                    // noinspection BusyWait
-                    Thread.sleep(1_000);
-                } catch (InterruptedException exception) {
-                    System.out.println("Thread has been interrupted!");
-                    break;
-                }
+            while (!Thread.currentThread().isInterrupted()) {
+                log.log(Level.INFO, "Tick!");
+                withThreadInterruptionHandled(() -> sleep(1_000));
             }
-            System.out.println("Tuck!");
+            log.log(Level.INFO, "Tuck!");
         });
 
         var interruptionThread = new Thread(() -> {
-            try {
-                Thread.sleep(10_000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            sleep(5_000);
 
-            System.out.println("Interrupting all threads!");
+            log.log(Level.INFO, "Interrupting all threads!");
             helloWorldThread.interrupt();
             tickThread.interrupt();
         });
@@ -97,9 +89,7 @@ public class ThreadTest {
     void test2() {
         var thread0 = Thread.ofPlatform()
                 .name("thread-0")
-                .unstarted(() -> greetTheWorld(1_000));
-
-        thread0.start();
+                .start(() -> greetTheWorld(1_000));
 
         Thread.sleep(3_000);
 
@@ -113,35 +103,31 @@ public class ThreadTest {
     void test3() {
         var group = new ThreadGroup("custom");
 
-        var thread0 = Thread.ofPlatform()
+        Thread.ofPlatform()
                 .name("thread-0")
                 .group(group)
                 .priority(1)
                 .start(() -> greetTheWorld(1_000));
 
-        var thread1 = Thread.ofPlatform()
+        Thread.ofPlatform()
                 .name("thread-1")
                 .group(group)
                 .priority(2)
                 .start(() -> greetTheWorld(1_000));
 
         Thread.sleep(5_000);
-        System.out.printf("Active threads: %s%n", group.activeCount());
+        log.log(Level.INFO, "Total active threads: {0}", group.activeCount());
 
         group.interrupt();
+
         Thread.sleep(1_000);
+        log.log(Level.INFO, "Total active threads: {0}", group.activeCount());
     }
 
-    private static void greetTheWorld(long sleep) {
-        while (!Thread.interrupted()) {
-            System.out.printf("Hello, world, from %s%n", Thread.currentThread().getName());
-            try {
-                // noinspection BusyWait
-                Thread.sleep(sleep);
-            } catch (InterruptedException exception) {
-                System.out.println("Thread has been interrupted!");
-                break;
-            }
+    private static void greetTheWorld(long sleepMs) {
+        while (!Thread.currentThread().isInterrupted()) {
+            log.log(Level.INFO, "Hello, world, from {0}", getCurrentThreadName());
+            sleep(sleepMs);
         }
     }
 
