@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.error;
@@ -71,6 +72,18 @@ public class BlockingApiProcessingTest {
 
             for (int i = 0; i < 10; i++) {
                 api.submit(() -> getClient(queue));
+            }
+
+            var start = System.currentTimeMillis();
+            while ((System.currentTimeMillis() - start) < 30_000) {
+                if (api instanceof ThreadPoolExecutor pool) {
+                    info(
+                            "[POOL] Активные потоки при обработке API: {0}, кол-во задач: {1}, "
+                                    + "кол-во выполненных задач: {2}, в очереди: {3}",
+                            pool.getActiveCount(), pool.getTaskCount(),
+                            pool.getCompletedTaskCount(), pool.getQueue().size());
+                }
+                sleep(1_000);
             }
         }
     }
