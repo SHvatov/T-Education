@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class CompletableFutureTest {
 
     @Test
-    @DisplayName("")
+    @DisplayName("Java 8 - апгрейд для Future")
     void test0() {
 
     }
