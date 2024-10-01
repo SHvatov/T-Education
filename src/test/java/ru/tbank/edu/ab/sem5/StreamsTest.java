@@ -8,16 +8,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import reactor.util.function.Tuples;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Spliterator;
@@ -154,21 +156,45 @@ public class StreamsTest {
 
         findUpcomingEvents(events, 7);
         findTopThreeEvents(events);
-        scheduleTopEventsForBudget(events, BigDecimal.valueOf(2_000));
-        findEventsDistributionByDate(events);
+        scheduleTopEventsForBudget(events, 2_000);
+        findEventsDistributionByDayOfTheWeek(events);
         findEventsDistributionByPlace(events);
     }
 
     private void findTopThreeEvents(List<EnrichedEvent> events) {
-        // todo
+        printResult(
+                events.stream()
+                        .sorted(Comparator.comparingInt(EnrichedEvent::favorites).reversed())
+                        .limit(3));
     }
 
-    private void scheduleTopEventsForBudget(List<EnrichedEvent> events, BigDecimal budget) {
-        // todo
+    private void scheduleTopEventsForBudget(List<EnrichedEvent> events, int budget) {
+        var result = events.stream()
+                .sorted(Comparator.comparingInt(EnrichedEvent::favorites).reversed())
+                .map(it -> Tuples.of(it.price(), List.of(it)))
+                .reduce(Tuples.of(budget, new ArrayList<>()), (acc, event) -> {
+                    var remains = acc.getT1() - event.getT1();
+                    if (remains >= 0) {
+                        acc.getT2().addAll(event.getT2());
+                        return Tuples.of(remains, acc.getT2());
+                    }
+                    return acc;
+                });
+
+        var eventsDescription = result.getT2().stream()
+                .map(it -> "\"%s\" за %s деняк (%s лайков)".formatted(it.title(), it.price(), it.favorites()))
+                .collect(Collectors.joining("\n\t- "));
+        System.out.printf(
+                "На сумму %d мы сможем посетить %d мероприятий, и у нас еще останется %d деняк: \n\t- %s\n",
+                budget, result.getT1(), result.getT2().size(), eventsDescription);
     }
 
-    private void findEventsDistributionByDate(List<EnrichedEvent> events) {
-        // todo
+    private void findEventsDistributionByDayOfTheWeek(List<EnrichedEvent> events) {
+        events.stream()
+                .collect(Collectors.groupingBy(it -> it.date().getDayOfWeek(), Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(it -> System.out.printf("На %s приходится %d событий%n", it.getKey(), it.getValue()));
     }
 
     private void findEventsDistributionByPlace(List<EnrichedEvent> events) {
@@ -177,6 +203,11 @@ public class StreamsTest {
 
     private void findUpcomingEvents(List<EnrichedEvent> events, int daysFromToday) {
         // todo
+    }
+
+    private static <T> void printResult(Stream<T> stream) {
+        var result = stream.toList();
+        System.out.println("Результат работы пайплайна: " + result);
     }
 
     @Test
