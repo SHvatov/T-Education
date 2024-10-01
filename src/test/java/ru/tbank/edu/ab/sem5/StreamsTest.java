@@ -211,9 +211,25 @@ public class StreamsTest {
         System.out.println("Результат работы пайплайна: " + result);
     }
 
+    // https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html
+    @Test
+    @DisplayName("Типы операций в стримах")
+    void test1() {
+        var events = Stream.iterate(0, i -> i + 1) // source
+                // intermediate operations
+                .map(page -> getEvents(page + 1))
+                .map(EVENTS_MAPPER)
+                .map(Events::events)
+                .flatMap(Collection::stream)
+                .map(EnrichedEvent::new) // statless operation
+                .limit(300) // stateful operation
+                // terminal operation
+                .toList();
+    }
+
     @Test
     @DisplayName("Пример параллелизации Stream'а")
-    void test1() {
+    void test2() {
         var events = Stream.iterate(0, i -> i + 1)
                 .map(page -> getEvents(page + 1))
                 .map(EVENTS_MAPPER)
