@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ public class StreamsTest {
     private static final Random RANDOM = new Random();
 
     private static final ResponseMapper<String, Events> EVENTS_MAPPER =
-            json -> OBJECT_MAPPER.convertValue(json, Events.class);
+            json -> OBJECT_MAPPER.readValue(json, Events.class);
 
     private static final List<String> PLACES =
             List.of("Эрмитаж", "Зимний дворец", "Петропавловская крепость", "Петергоф", "Исаакиевский собор",
@@ -45,9 +46,10 @@ public class StreamsTest {
     @FunctionalInterface
     private interface ResponseMapper<I, O> extends Function<I, O> {
 
-        O map(I response);
+        O map(I response) throws Exception;
 
         @Override
+        @SneakyThrows
         default O apply(I i) {
             return map(i);
         }
@@ -140,7 +142,6 @@ public class StreamsTest {
     @Test
     @DisplayName("Работа со Stream'ами")
     void test0() {
-        // todo: придумать интересный flow
         var events = Stream.iterate(0, i -> i + 1)
                 .map(page -> getEvents(page + 1))
                 .map(EVENTS_MAPPER)
@@ -149,6 +150,33 @@ public class StreamsTest {
                 .map(EnrichedEvent::new)
                 .limit(300)
                 .toList();
+        System.out.printf("Кол-во событий: %s%n", events.size());
+
+        findUpcomingEvents(events, 7);
+        findTopThreeEvents(events);
+        scheduleTopEventsForBudget(events, BigDecimal.valueOf(2_000));
+        findEventsDistributionByDate(events);
+        findEventsDistributionByPlace(events);
+    }
+
+    private void findTopThreeEvents(List<EnrichedEvent> events) {
+        // todo
+    }
+
+    private void scheduleTopEventsForBudget(List<EnrichedEvent> events, BigDecimal budget) {
+        // todo
+    }
+
+    private void findEventsDistributionByDate(List<EnrichedEvent> events) {
+        // todo
+    }
+
+    private void findEventsDistributionByPlace(List<EnrichedEvent> events) {
+        // todo
+    }
+
+    private void findUpcomingEvents(List<EnrichedEvent> events, int daysFromToday) {
+        // todo
     }
 
     @Test

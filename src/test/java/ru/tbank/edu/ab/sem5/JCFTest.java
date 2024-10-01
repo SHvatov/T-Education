@@ -171,7 +171,7 @@ public class JCFTest {
 
         for (var number : numbers) { // Под капотом - iterator
             System.out.println(number);
-            numbers.remove(number);
+            numbers.remove(number); // кидает исключение
         }
         System.out.println(numbers);
 
