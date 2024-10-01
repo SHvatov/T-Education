@@ -154,6 +154,7 @@ public class StreamsTest {
                 .toList();
         System.out.printf("Кол-во событий: %s%n", events.size());
 
+        // todo: показать примеры на котлине)
         findUpcomingEvents(events, 7);
         findTopThreeEvents(events);
         scheduleTopEventsForBudget(events, 2_000);
