@@ -215,6 +215,7 @@ public class StreamsTest {
     @Test
     @DisplayName("Типы операций в стримах")
     void test1() {
+        // Streams vs for loops
         var events = Stream.iterate(0, i -> i + 1) // source
                 // intermediate operations
                 .map(page -> getEvents(page + 1))
@@ -228,8 +229,46 @@ public class StreamsTest {
     }
 
     @Test
-    @DisplayName("Пример параллелизации Stream'а")
+    @DisplayName("Stream vs Loop")
     void test2() {
+        final var desiredEventsCount = 30;
+
+        // Streams vs for loops
+        var events1 = Stream.iterate(0, i -> i + 1) // source
+                // intermediate operations
+                .map(page -> getEvents(page + 1))
+                .map(EVENTS_MAPPER)
+                .map(Events::events)
+                .flatMap(Collection::stream)
+                .map(EnrichedEvent::new) // statless operation
+                .limit(desiredEventsCount) // stateful operation
+                // terminal operation
+                .toList();
+
+        var events2 = new ArrayList<>();
+        var page = 1;
+        while (true) {
+            var eventsPage = EVENTS_MAPPER.apply(getEvents(page++)).events();
+            if (eventsPage.isEmpty()) {
+                break;
+            }
+
+            for (var event : eventsPage) {
+                events2.add(new EnrichedEvent(event));
+                if (events2.size() == desiredEventsCount) {
+                    break;
+                }
+            }
+
+            if (events2.size() == desiredEventsCount) {
+                break;
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Пример параллелизации Stream'а")
+    void test3() {
         var events = Stream.iterate(0, i -> i + 1)
                 .map(page -> getEvents(page + 1))
                 .map(EVENTS_MAPPER)
