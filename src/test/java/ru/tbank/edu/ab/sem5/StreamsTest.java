@@ -242,6 +242,7 @@ public class StreamsTest {
                 .flatMap(Collection::stream)
                 .map(EnrichedEvent::new) // statless operation
                 .limit(desiredEventsCount) // stateful operation
+                .sorted(Comparator.comparingInt(EnrichedEvent::favorites)) // breakpoint RefSortingSink
                 // terminal operation
                 .toList();
 
