@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -153,6 +154,13 @@ public class JCFTest {
         var key = new CustomKey("key");
         System.out.println(map.put(key, "value4"));
         System.out.println(map.put(key, "value5"));
+
+        // todo: отличие от Linked...
+        var linkedMap = new LinkedHashMap<String, String>();
+        linkedMap.put("key1", "value1");
+        linkedMap.put("key2", "value2");
+        // before & after
+        linkedMap.forEach((k, v) -> System.out.printf("Key: %s, Value: %s%n", k, v));
     }
 
     @Test
