@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -148,9 +149,10 @@ public class StreamsTest {
                 .map(page -> getEvents(page + 1))
                 .map(EVENTS_MAPPER)
                 .map(Events::events)
+                .takeWhile(Predicate.not(Collection::isEmpty))
                 .flatMap(Collection::stream)
                 .map(EnrichedEvent::new)
-                .limit(300)
+                // .limit(300)
                 .toList();
         System.out.printf("Кол-во событий: %s%n", events.size());
 

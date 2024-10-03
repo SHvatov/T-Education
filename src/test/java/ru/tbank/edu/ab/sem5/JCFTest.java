@@ -90,7 +90,7 @@ public class JCFTest {
         init.accept(linkedHashSet);
         System.out.println(linkedHashSet);
 
-        var treeSet = new TreeSet<String>(Comparator.naturalOrder()); // Под капотом - TreeMap
+        var treeSet = new TreeSet<String>(); // Под капотом - TreeMap
         init.accept(treeSet);
         System.out.println(treeSet);
 

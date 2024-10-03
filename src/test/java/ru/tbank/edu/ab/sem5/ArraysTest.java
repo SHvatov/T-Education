@@ -49,6 +49,10 @@ public class ArraysTest {
 
         // 4. Вспомогательные методы - класс Arrays!
         Arrays.toString(numbers);
+        Arrays
+                .stream(numbers)
+                .boxed()
+                .toList();
         Arrays.copyOf(numbers, numbers.length * 2);
         Arrays.binarySearch(numbers, 3);
         // todo: посмотреть на другие методы в том числе!
@@ -71,7 +75,7 @@ public class ArraysTest {
         }
 
         public void add(E element) {
-            elements[size++] = element;
+            add(size - 1, element);
         }
 
         public void add(int index, E element) {
