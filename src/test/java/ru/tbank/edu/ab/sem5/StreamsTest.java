@@ -15,12 +15,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -161,22 +156,41 @@ public class StreamsTest {
 
     private void findTopThreeEvents(List<EnrichedEvent> events) {
         // todo
+        System.out.println("Топ 3 события: \n" + events.stream()
+                .sorted(Comparator.comparingInt(EnrichedEvent::favorites).reversed())
+                .limit(3)
+                .toList()
+        );
     }
 
     private void scheduleTopEventsForBudget(List<EnrichedEvent> events, BigDecimal budget) {
         // todo
+        System.out.println("Топ лучших мероприятий с бюджетом " + budget + ": \n" +
+                events.stream().filter(event -> event.price <= budget.intValue())
+                        .sorted(Comparator.comparingInt(EnrichedEvent::favorites).reversed()).toList()
+        );
     }
 
     private void findEventsDistributionByDate(List<EnrichedEvent> events) {
         // todo
+        System.out.println("Группировка событий по датам:\n" + events.stream().collect(
+                Collectors.groupingBy(EnrichedEvent::date)
+        ));
     }
 
     private void findEventsDistributionByPlace(List<EnrichedEvent> events) {
         // todo
+        System.out.println("Групировка событий по местам:\n" + events.stream().collect(
+                Collectors.groupingBy(EnrichedEvent::place)
+        ));
     }
 
     private void findUpcomingEvents(List<EnrichedEvent> events, int daysFromToday) {
         // todo
+        events.stream().filter(event ->
+                        (event.date.isEqual(LocalDate.now().plusDays(daysFromToday)) ||
+                                event.date.isBefore(LocalDate.now().plusDays(daysFromToday))))
+                .forEach(event -> System.out.println("Событие " + event + " произойдет в следущие " + daysFromToday + " дней"));
     }
 
     @Test
