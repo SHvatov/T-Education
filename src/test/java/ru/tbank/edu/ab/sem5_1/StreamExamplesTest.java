@@ -32,7 +32,7 @@ class StreamExamplesTest {
 
     @Test
     @DisplayName("Примеры работы со Stream API")
-    void test0() {
+    void test() {
         var events = getEvents(30);
         System.out.printf("Кол-во событий: %s%n", events.size());
 

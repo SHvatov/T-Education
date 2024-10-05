@@ -68,7 +68,7 @@ class ParallelStreamExampleTest {
 
     @Test
     @DisplayName("Пример параллелизации Stream'а")
-    void test3() {
+    void test() {
         var events = EventUtils.getEvents(100);
         StreamSupport.stream(new EventsSpliterator(events), true)
                 .map(event ->

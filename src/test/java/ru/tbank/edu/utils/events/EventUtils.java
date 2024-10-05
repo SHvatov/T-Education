@@ -23,14 +23,14 @@ public class EventUtils {
             new ObjectMapper()
                     .configure(IGNORE_UNKNOWN, true);
 
-    private static final ResponseMapper<String, Events> EVENTS_MAPPER =
-            json -> OBJECT_MAPPER.readValue(json, Events.class);
-
     private static final int DEFAULT_PAGE_SIZE = 20;
+
+    public static final ResponseMapper<String, Events> EVENTS_MAPPER =
+            json -> OBJECT_MAPPER.readValue(json, Events.class);
 
     public static List<EnrichedEvent> getEvents(int total) {
         return Stream.iterate(0, i -> i + 1)
-                .map(page -> getEventsPage(page + 1))
+                .map(page -> doGetEventsPage(page + 1))
                 .map(EVENTS_MAPPER)
                 .map(Events::events)
                 .flatMap(Collection::stream)
@@ -41,7 +41,7 @@ public class EventUtils {
 
     public static Stream<EnrichedEvent> getEvents() {
         return Stream.iterate(0, i -> i + 1)
-                .map(page -> getEventsPage(page + 1))
+                .map(page -> doGetEventsPage(page + 1))
                 .map(EVENTS_MAPPER)
                 .map(Events::events)
                 .flatMap(Collection::stream)
@@ -49,7 +49,14 @@ public class EventUtils {
     }
 
     @SneakyThrows
-    private static String getEventsPage(int page) {
+    public static List<EnrichedEvent> getEventsPage(int page) {
+        return EVENTS_MAPPER.map(doGetEventsPage(page)).events().stream()
+                .map(EnrichedEvent::new)
+                .toList();
+    }
+
+    @SneakyThrows
+    private static String doGetEventsPage(int page) {
         @SuppressWarnings("deprecation")
         var eventsApi = new URL(
                 "https://kudago.com/public-api/v1.2/events/?" +
