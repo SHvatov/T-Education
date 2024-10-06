@@ -169,12 +169,20 @@ public class StreamsTest {
                 events.stream().filter(event -> event.price <= budget.intValue())
                         .sorted(Comparator.comparingInt(EnrichedEvent::favorites).reversed()).toList()
         );
+        /**
+         * если честно даже после того как вы оставили комментарий
+         * я не понимаю что должен делать этот метод)
+         * как мне показалось вы хотите чтобы метод находил список событий
+         * с самым большим количеством дозволимым на этот бюджет
+         * тут или эврестический алгос или динамическое программирование
+         * ни то ни то я не представляю как решать это в стримах
+         */
     }
 
     private void findEventsDistributionByDate(List<EnrichedEvent> events) {
         // todo
         System.out.println("Группировка событий по датам:\n" + events.stream().collect(
-                Collectors.groupingBy(EnrichedEvent::date)
+                Collectors.groupingBy(EnrichedEvent::date, Collectors.counting())
         ));
     }
 
@@ -187,10 +195,15 @@ public class StreamsTest {
 
     private void findUpcomingEvents(List<EnrichedEvent> events, int daysFromToday) {
         // todo
-        events.stream().filter(event ->
-                        (event.date.isEqual(LocalDate.now().plusDays(daysFromToday)) ||
-                                event.date.isBefore(LocalDate.now().plusDays(daysFromToday))))
+        var now = LocalDate.now().plusDays(daysFromToday);
+        events.stream().filter(event -> checkDateInUpcomingData(event, now))
                 .forEach(event -> System.out.println("Событие " + event + " произойдет в следущие " + daysFromToday + " дней"));
+    }
+
+    private boolean checkDateInUpcomingData(final EnrichedEvent event, final LocalDate date) {
+        // проверка что событие произойдет в промежутке до переданной date
+        return event.date.isEqual(date) ||
+                event.date.isBefore(date);
     }
 
     @Test
