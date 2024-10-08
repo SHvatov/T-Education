@@ -26,7 +26,7 @@ public class SynchronizedAndAtomicTest {
     @Test
     @DisplayName("Примеры использования синхронизированных коллекций")
     void test0() {
-        var map = new TreeMap<>((_, _) -> {
+        var unSyncMap = new TreeMap<>((_, _) -> {
             sleep(10);
             return 0;
         });
@@ -41,12 +41,13 @@ public class SynchronizedAndAtomicTest {
         var latch = new CountDownLatch(1);
 
         final var key = "test";
+        final var map = unSyncMap;
         IntStream.range(0, 5).forEach(ignored ->
                 Thread.ofPlatform().start(() -> {
                     info("Поток {0} ждет старта!", getCurrentThreadName());
                     withThreadInterruptionHandled(latch::await);
                     info("Поток {0} стартовал!", getCurrentThreadName());
-                    var exists = map.put(key, key) != null;
+                    var exists = map.putIfAbsent(key, key + ignored) != null;
                     info("[{0} нс] Ключ {1} присутствует в коллекции? {2}.",
                             System.nanoTime(), key, exists ? "Да" : "Нет");
                 }));
@@ -54,6 +55,7 @@ public class SynchronizedAndAtomicTest {
         sleep(1_000);
         latch.countDown();
         sleep(5_000);
+        info("Итоговое значение: {0}", map.get(key));
     }
 
     @Test
