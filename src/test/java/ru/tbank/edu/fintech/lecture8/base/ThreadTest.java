@@ -41,6 +41,7 @@ public class ThreadTest {
             tickThread.interrupt();
         });
 
+        // helloWorldThread.threadState()
         interruptionThread.start();
         helloWorldThread.start();
         tickThread.start();
@@ -59,7 +60,7 @@ public class ThreadTest {
                 .daemon(false)
                 .start(() -> greetTheWorld(1_000));
 
-        // will live, even when JVM dies
+        // will die, when JVM dies
         var daemon = Thread.ofPlatform()
                 .name("daemon-thread")
                 .daemon()
@@ -72,6 +73,7 @@ public class ThreadTest {
 
         Thread.sleep(5_000);
 
+        // todo: example with interrupted & without sleep
         thread.interrupt();
         daemon.interrupt();
         virtual.interrupt();
@@ -91,8 +93,8 @@ public class ThreadTest {
 
         Thread.sleep(3_000);
 
-        thread0.join(); // blocks current thread
         thread0.interrupt(); // interrupts thread
+        thread0.join(); // blocks current thread
     }
 
     @Test
@@ -127,6 +129,7 @@ public class ThreadTest {
             info("Hello, world, from {0}", getCurrentThreadName());
             sleep(sleepMs);
         }
+        info("Goodbye from {0}", getCurrentThreadName());
     }
 
 }

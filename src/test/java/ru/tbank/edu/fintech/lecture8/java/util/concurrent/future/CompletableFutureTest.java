@@ -34,6 +34,7 @@ public class CompletableFutureTest {
             CompletionStage<Integer> stage = CompletableFuture.supplyAsync(() -> 0, executor);
 
             // 2. Что под капотом?
+            // result + stack, AltResult
             CompletableFuture.supplyAsync(() -> 0, executor)
                     .thenApplyAsync(it -> it + 1, executor)
                     .thenAccept(it -> info("Итоговое значение: {0}", it))
