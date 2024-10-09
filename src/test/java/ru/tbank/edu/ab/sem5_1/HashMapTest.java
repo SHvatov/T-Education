@@ -26,6 +26,10 @@ class HashMapTest {
                                 .mapToObj(it -> (char) it)
                                 .map(Object::toString)
                                 .reduce("", (acc, el) -> acc + el)));
+        map.compute("key", (key, value) -> value != null ? value.substring(0, 1) : "missing");
+        var optValue = map.get("key");
+        var newValue = optValue != null ? optValue.substring(0, 1) : "missing";
+        map.put("key", newValue);
 
         // Получение элементов
         System.out.println("get(key): " + map.get("key"));
