@@ -18,6 +18,7 @@ public class VirtualThreadTest {
         for (int i = 0; i < 100_000; i++) {
             final var delay = (long) i;
             Thread.ofVirtual().start(() -> {
+                // todo: look under the hood
                 ThreadUtils.withThreadInterruptionHandled(() -> Thread.sleep(delay));
                 System.out.print(".");
             });
