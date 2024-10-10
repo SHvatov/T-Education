@@ -2,6 +2,7 @@ package ru.tbank.edu.fintech.lecture8.base;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import static ru.tbank.edu.fintech.lecture8.utils.LoggingUtils.info;
@@ -51,6 +52,42 @@ public class ThreadTest {
         tickThread.join();
     }
 
+    @SneakyThrows
+    @RepeatedTest(10)
+    @DisplayName("Очередь на sync")
+    void test8() {
+        var monitor = new Object();
+        Runnable syncAction = () -> {
+            info("Starting sync block in thread {0}", getCurrentThreadName());
+            synchronized (monitor) {
+                info("Executing sync block in thread {0}", getCurrentThreadName());
+                sleep(5_000);
+            }
+        };
+
+        Thread.ofPlatform()
+                .name("1")
+                .start(syncAction);
+
+        Thread.sleep(1_000);
+        Thread.ofPlatform()
+                .name("2")
+                .start(syncAction);
+
+        Thread.sleep(1_000);
+        Thread.ofPlatform()
+                .name("3")
+                .start(syncAction);
+
+        Thread.sleep(1_000);
+        Thread.ofPlatform()
+                .name("4")
+                .start(syncAction);
+
+        Thread.sleep(15_000);
+        info("------");
+    }
+
     @Test
     @SneakyThrows
     @DisplayName("Создание потоков")
@@ -93,8 +130,8 @@ public class ThreadTest {
 
         Thread.sleep(3_000);
 
-        thread0.interrupt(); // interrupts thread
         thread0.join(); // blocks current thread
+        thread0.interrupt(); // interrupts thread
     }
 
     @Test
