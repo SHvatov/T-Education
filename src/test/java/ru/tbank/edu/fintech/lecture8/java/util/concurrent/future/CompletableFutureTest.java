@@ -159,7 +159,10 @@ public class CompletableFutureTest {
     }
 
     private static CompletableFuture<Integer> prepareDelayedFuture(int delay, Executor executor) {
-        return CompletableFuture.runAsync(() -> sleep(delay), executor)
+        return CompletableFuture.runAsync(() -> {
+                    sleep(delay);
+                    info("А я все равно завершился!");
+                }, executor)
                 .thenApplyAsync(_ -> (int) (Math.random() * 30));
     }
 

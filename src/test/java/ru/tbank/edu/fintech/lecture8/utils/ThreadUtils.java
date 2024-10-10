@@ -15,7 +15,12 @@ public class ThreadUtils {
     @SneakyThrows
     public static void sleep(long ms) {
         trace("Stopping thread {0} for {1} ms", getCurrentThreadName(), ms);
-        Thread.sleep(ms);
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            error("Поток в методе sleep был прерван");
+            throw e;
+        }
     }
 
     @SneakyThrows
