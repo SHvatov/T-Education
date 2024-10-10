@@ -21,7 +21,7 @@ public record EnrichedEvent(
         this(
                 event.id(), event.title(), event.comments(), event.favorites(),
                 LocalDate.now().plusDays(RANDOM.nextInt(0, 14)),
-                PLACES.get(RANDOM.nextInt(0, PLACES.size() - 1)),
+                PLACES.get(RANDOM.nextInt(0, PLACES.size())),
                 RANDOM.nextInt(0, 1000));
     }
 

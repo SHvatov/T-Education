@@ -46,7 +46,7 @@ class ParallelStreamExampleTest {
                 return null;
             }
 
-            var randomPlace = uniquePlaces.get(RANDOM.nextInt(0, uniquePlaces.size() - 1));
+            var randomPlace = uniquePlaces.get(RANDOM.nextInt(0, uniquePlaces.size()));
             var eventsPartition = events.stream()
                     .filter(it -> Objects.equals(it.place(), randomPlace))
                     .toList();
