@@ -44,7 +44,8 @@ public class CompletableFutureTest {
             // 3. Как завершить Future?
             // 3.1 complete*
             var f1 = prepareDelayedFuture(1_000, executor);
-            f1.complete(-10);
+            // f1.cancel(true);
+            f1.complete(-10); // future still completes
             assertEquals(-10, f1.resultNow());
 
             f1 = prepareDelayedFuture(1_000, executor);
