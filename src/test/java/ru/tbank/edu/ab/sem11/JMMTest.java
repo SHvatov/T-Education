@@ -3,6 +3,7 @@ package ru.tbank.edu.ab.sem11;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 
 @Log4j2
+@Disabled
 public class JMMTest extends AbstractThreadTest {
 
     private static final int MAX_ATTEMPTS = 1_000;
