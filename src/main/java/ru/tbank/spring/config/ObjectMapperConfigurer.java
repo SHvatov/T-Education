@@ -15,9 +15,6 @@ import ru.tbank.spring.converter.UserGenderConverter;
 import ru.tbank.spring.dto.User;
 
 
-/**
- * Note: работает только для JSON!
- */
 @Configuration
 @RequiredArgsConstructor
 public class ObjectMapperConfigurer {
@@ -34,7 +31,7 @@ public class ObjectMapperConfigurer {
                 return userGenderConverter.convert(parser.getText());
             }
         });
-        module.addSerializer(User.Gender.class, new JsonSerializer<User.Gender>() {
+        module.addSerializer(User.Gender.class, new JsonSerializer<>() {
             @Override
             @SneakyThrows
             public void serialize(User.Gender gender, JsonGenerator generator, SerializerProvider provider) {

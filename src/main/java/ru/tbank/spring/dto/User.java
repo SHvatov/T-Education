@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,6 @@ import java.util.Set;
 
 @Data
 @Builder
-@XmlRootElement
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -39,8 +37,8 @@ public class User {
     @Getter
     @RequiredArgsConstructor
     public enum Gender {
-        MALE(Set.of("Мужской", "М", "м", "мужской", "муж")),
-        FEMALE(Set.of("Женский", "Ж", "ж", "женский", "жен")),
+        MALE(Set.of("м", "мужской", "муж")),
+        FEMALE(Set.of("ж", "женский", "жен")),
         UNDEFINED(Set.of("Не определено"));
 
         private final Set<String> aliases;

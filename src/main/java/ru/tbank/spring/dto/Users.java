@@ -1,6 +1,5 @@
 package ru.tbank.spring.dto;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,6 @@ import java.util.List;
 
 @Data
 @Builder
-@XmlRootElement
 @NoArgsConstructor
 @AllArgsConstructor
 public class Users {

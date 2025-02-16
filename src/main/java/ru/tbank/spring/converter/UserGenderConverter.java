@@ -15,8 +15,9 @@ public class UserGenderConverter implements Converter<String, User.Gender> {
             return User.Gender.UNDEFINED;
         }
 
+        var loweredSource = source.toLowerCase();
         for (var gender : User.Gender.values()) {
-            if (gender.getAliases().contains(source)) {
+            if (gender.getAliases().contains(loweredSource)) {
                 return gender;
             }
         }
