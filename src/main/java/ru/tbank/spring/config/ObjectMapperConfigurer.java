@@ -23,25 +23,24 @@ public class ObjectMapperConfigurer {
 
     @Bean
     public SimpleModule userGenderModule() {
-        var module = new SimpleModule();
-        module.addDeserializer(User.Gender.class, new JsonDeserializer<>() {
-            @Override
-            @SneakyThrows
-            public User.Gender deserialize(JsonParser parser, DeserializationContext context) {
-                return userGenderConverter.convert(parser.getText());
-            }
-        });
-        module.addSerializer(User.Gender.class, new JsonSerializer<>() {
-            @Override
-            @SneakyThrows
-            public void serialize(User.Gender gender, JsonGenerator generator, SerializerProvider provider) {
-                generator.writeObject(
-                        gender.getAliases().stream()
-                                .findFirst()
-                                .orElse(gender.name()));
-            }
-        });
-        return module;
+        return new SimpleModule()
+                .addDeserializer(User.Gender.class, new JsonDeserializer<>() {
+                    @Override
+                    @SneakyThrows
+                    public User.Gender deserialize(JsonParser parser, DeserializationContext context) {
+                        return userGenderConverter.convert(parser.getText());
+                    }
+                })
+                .addSerializer(User.Gender.class, new JsonSerializer<>() {
+                    @Override
+                    @SneakyThrows
+                    public void serialize(User.Gender gender, JsonGenerator generator, SerializerProvider provider) {
+                        generator.writeObject(
+                                gender.getAliases().stream()
+                                        .findFirst()
+                                        .orElse(gender.name()));
+                    }
+                });
     }
 
 }
