@@ -1,18 +1,22 @@
 package ru.tbank.spring.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tbank.spring.dto.User;
-import ru.tbank.spring.dto.Users;
+import ru.tbank.spring.model.dto.UserDto;
+import ru.tbank.spring.model.dto.UsersDto;
+import ru.tbank.spring.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,10 +28,11 @@ import java.util.List;
  * @see org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-    private final List<User> users = new ArrayList<>();
+    private final UserService service;
 
     // POST http://localhost:8080/users
     // Content-Type: application/json
@@ -44,8 +49,8 @@ public class UserController {
     // }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createUserViaJson(@RequestBody @Valid User user) {
-        users.add(user);
+    public Long createUserViaJson(@RequestBody @Valid UserDto user) {
+        return service.save(user);
     }
 
     // POST http://localhost:8080/users
@@ -63,21 +68,32 @@ public class UserController {
     // </user>
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_XML_VALUE)
-    public void createUserViaXml(@RequestBody @Valid User user) {
-        users.add(user);
+    public Long createUserViaXml(@RequestBody @Valid UserDto user) {
+        return service.save(user);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserDto getUser(
+            @PathVariable
+            @NotNull(message = "ИД пользователя не может быть пустым")
+            @Positive(message = "ИД пользователя не может быть отрицательным")
+            Long id) {
+
+        return service.get(id);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getUsersJson() {
-        return users;
+    public List<UserDto> getUsersJson() {
+        return service.getAll();
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/xml", produces = MediaType.APPLICATION_XML_VALUE)
-    public Users getUsersXml() {
-        return Users.builder()
-                .users(users)
+    public UsersDto getUsersXml() {
+        return UsersDto.builder()
+                .users(service.getAll())
                 .build();
     }
 

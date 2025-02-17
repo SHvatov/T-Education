@@ -12,7 +12,7 @@ import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tbank.spring.converter.UserGenderConverter;
-import ru.tbank.spring.dto.User;
+import ru.tbank.spring.model.dto.UserDto;
 
 
 @Configuration
@@ -24,17 +24,17 @@ public class ObjectMapperConfigurer {
     @Bean
     public SimpleModule userGenderModule() {
         return new SimpleModule()
-                .addDeserializer(User.Gender.class, new JsonDeserializer<>() {
+                .addDeserializer(UserDto.Gender.class, new JsonDeserializer<>() {
                     @Override
                     @SneakyThrows
-                    public User.Gender deserialize(JsonParser parser, DeserializationContext context) {
+                    public UserDto.Gender deserialize(JsonParser parser, DeserializationContext context) {
                         return userGenderConverter.convert(parser.getText());
                     }
                 })
-                .addSerializer(User.Gender.class, new JsonSerializer<>() {
+                .addSerializer(UserDto.Gender.class, new JsonSerializer<>() {
                     @Override
                     @SneakyThrows
-                    public void serialize(User.Gender gender, JsonGenerator generator, SerializerProvider provider) {
+                    public void serialize(UserDto.Gender gender, JsonGenerator generator, SerializerProvider provider) {
                         generator.writeObject(
                                 gender.getAliases().stream()
                                         .findFirst()

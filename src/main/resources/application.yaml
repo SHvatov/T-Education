@@ -1,1 +1,41 @@
 server.port: 8080
+
+spring:
+  # Активный профиль приложения
+  profiles.active: ${ACTIVE_PROFILE:prod}
+
+  # Настройки базы данных
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+    # Настройки пула коннектов
+    hikari:
+      schema: ${DB_SCHEMA}
+      maximum-pool-size: ${DB_MAX_POOL_SIZE:8}
+      connection-timeout: 10000 # 10 секунд
+      validation-timeout: 5000 # 5 секунды
+      max-lifetime: 300000 # 5 минут
+      leak-detection-threshold: 300000 # 5 минут
+      pool-name: HikariPool
+
+  # Настройки JPA / Hibernate
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl.auto: validate
+        show_sql: true
+  jta.enabled: false
+
+  # Настройки миграции данных
+  liquibase:
+    enabled: true
+    change-log: "classpath:/db/changelog-master.yaml"
+    url: ${LIQUIBASE_DATABASE_URL:${spring.datasource.url}}
+    contexts: ${spring.profiles.active}
+    driver-class-name: org.postgresql.Driver
+    liquibase-schema: ${LIQUIBASE_SCHEMA:public}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}

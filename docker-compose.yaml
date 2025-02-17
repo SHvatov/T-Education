@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: users_db
+      POSTGRES_SCHEMA: users
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - '5432:5432'
+
+  application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ACTIVE_PROFILE: dev
+      DB_USERNAME: admin
+      DB_PASSWORD: admin
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: users_db
+      DB_SCHEMA: users
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
