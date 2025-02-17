@@ -3,25 +3,25 @@ package ru.tbank.spring.converter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import ru.tbank.spring.dto.User;
+import ru.tbank.spring.model.dto.UserDto;
 
 
 @Component
-public class UserGenderConverter implements Converter<String, User.Gender> {
+public class UserGenderConverter implements Converter<String, UserDto.Gender> {
 
     @Override
-    public User.Gender convert(String source) {
+    public UserDto.Gender convert(String source) {
         if (!StringUtils.hasText(source)) {
-            return User.Gender.UNDEFINED;
+            return UserDto.Gender.UNDEFINED;
         }
 
         var loweredSource = source.toLowerCase();
-        for (var gender : User.Gender.values()) {
+        for (var gender : UserDto.Gender.values()) {
             if (gender.getAliases().contains(loweredSource)) {
                 return gender;
             }
         }
-        return User.Gender.UNDEFINED;
+        return UserDto.Gender.UNDEFINED;
     }
 
 }

@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: changelog-01-init-db-00
+      author: s.a.khvatov
+      changes:
+        - sql:
+            sql: create schema if not exists users authorization admin
+        - createTable:
+            columns:
+              - column:
+                  name: system_id
+                  type: bigint
+                  remarks: Системный ID сущности
+                  constraints:
+                    - nullable: false
+                    - unique: true
+                  autoIncrement: true
+                  startWith: 1
+                  incrementBy: 1
+              - column:
+                  name: fio
+                  type: varchar(256)
+                  remarks: Склеенное ФИО пользователя в формате Фамилия Имя Отчество
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone
+                  type: varchar(32)
+                  remarks: Телефонный номер пользователя
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(32)
+                  remarks: Email пользователя
+                  constraints:
+                    nullable: false
+              - column:
+                  name: row_insert_time
+                  type: timestamp
+                  remarks: Дата создания записи в таблице
+                  constraints:
+                    nullable: false
+              - column:
+                  name: row_update_time
+                  type: timestamp
+                  remarks: Дата создания записи в таблице
+            schemaName: users
+            tableName: users
+            remarks: Таблица с информацией о пользователях нашей системы

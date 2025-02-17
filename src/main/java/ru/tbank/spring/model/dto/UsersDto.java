@@ -1,4 +1,4 @@
-package ru.tbank.spring.dto;
+package ru.tbank.spring.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +13,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users {
+public class UsersDto {
 
-    private List<User> users = new ArrayList<>();
+    private List<UserDto> users = new ArrayList<>();
 
 }

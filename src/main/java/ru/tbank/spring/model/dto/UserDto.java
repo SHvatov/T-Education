@@ -1,4 +1,4 @@
-package ru.tbank.spring.dto;
+package ru.tbank.spring.model.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import ru.tbank.spring.validation.RussianPhoneNumber;
 
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserDto {
 
     @Valid
     @NotNull(message = "ФИО пользователя должно быть заполнено!")
@@ -45,6 +46,7 @@ public class User {
     }
 
     @Data
+    @Accessors(chain = true)
     public static class Fio {
 
         @NotBlank(message = "Имя пользователя должно быть указано!")
