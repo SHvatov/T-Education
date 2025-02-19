@@ -22,14 +22,13 @@ public interface UserMapper {
         Arrays.fill(fioParts, "");
 
         var splitFio = fio.split(" ");
-        for (int i = 0; i < splitFio.length; i++) {
-            fioParts[i] = splitFio[i];
-        }
+        System.arraycopy(splitFio, 0, fioParts, 0, splitFio.length);
 
-        return new UserDto.Fio()
-                .setFirstName(fioParts[0])
-                .setSecondName(fioParts[1])
-                .setMiddleName(fioParts[2]);
+        return UserDto.Fio.builder()
+                .firstName(fioParts[0])
+                .secondName(fioParts[1])
+                .middleName(fioParts[2])
+                .build();
     }
 
     User toEntity(UserDto user);

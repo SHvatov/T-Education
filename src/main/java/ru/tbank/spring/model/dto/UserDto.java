@@ -46,6 +46,7 @@ public class UserDto {
     }
 
     @Data
+    @Builder
     @Accessors(chain = true)
     public static class Fio {
 
