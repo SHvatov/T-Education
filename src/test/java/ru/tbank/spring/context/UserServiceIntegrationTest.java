@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserServiceIntegrationTest {
 
     @Container
+    // @ServiceConnection
     private final static PostgreSQLContainer<?> database =
             new PostgreSQLContainer<>(DockerImageName.parse("postgres:15"))
                     .withDatabaseName("users_db")
